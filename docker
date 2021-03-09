@@ -1,0 +1,73 @@
+DOCKER
+
+CLI :
+
+docker ps 'OR' images => containers running 
+docker ps -a => all containers, running or not
+images on dockerhub website
+docker pull postgress:'version' => installs image
+docker run postgress:'version' => installs and runs image
+
+
+image/container => image = package to download ; container is the environment running
+
+docker run :
+-d : detach mode
+-p6000:6756 => port binding : -p"computer port":"container port"
+--name "new name" "name of container" => change container name
+
+docker stop "container" => stop container (works for stopping images => stopping container stops the image )
+
+debugging :
+
+docker logs "container id" => logs of the container
+
+docker exec -it "container id/name" /bin/bash => go in the root directory of container
+
+to create a network to put image inside :
+docker network create "network name"
+to check networks :
+docker network ls
+
+/// to create a network with mongo and mongo-express :
+
+docker network create mongo-express
+
+docker run -d \
+-p 27017:27017 \
+-e MONGO_INITDB_ROOT_USERNAME=admin \
+-e MONGO_INITDB_ROOT_PASSWORD=password \
+--name mongodb \
+--net mongo-network \
+mongo
+
+docker run -d \
+-p 8081:8081 \
+-e ME_CONFIG_MONGODB_ADMINUSERNAME=admin \
+-e ME_CONFIG_MONGODB_ADMINPASSWORD=password \
+-e ME_CONFIG_MONGODB_SERVER=mongodb \
+--net mongo-network \
+--name mongo-express \
+mongo-express
+
+
+To remove container : docker container rm "container id"
+
+To build a docker image that loads mutliple services together :
+docker-compose -f mongo.yaml down
+(mongo.yaml is the image file)
+
+To stop the image :
+docker-compose -f mongo.yaml down
+
+To build image from Dockerfile :
+
+docker build -t my-app:1.0 .
+To run it :
+docker run my-app:1.0
+(to stop open new terminal window and do docker stop container command)
+
+To enter file system of image, from another terminal window : (id is from container)
+docker exec -it 9827b7d3b4e0 /bin/sh
+
+
